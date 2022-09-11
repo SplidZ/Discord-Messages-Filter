@@ -29,10 +29,15 @@ module.exports = {
                 return interaction.reply({ content: "📡 **Only the server owner can run this command.**", ephemeral: true })
             }
 
+            if (db.has(`filter.${interaction.guild.id}`)) {
+                return interaction.reply({ content: "📡 **The system is already activated.**", ephemeral: true })
+            }
+
             db.set(`filter.${interaction.guild.id}`, true);
 
             try {
-                return interaction.reply({ content: "📡 **System activated.**" })
+                return interaction.reply({
+                    content: "📡 **System activated.**" })
             } catch (error) {
                 return;
             }
@@ -41,6 +46,10 @@ module.exports = {
 
             if (interaction.user.id !== interaction.guild.ownerId) {
                 return interaction.reply({ content: "📡 **Only the server owner can run this command.**", ephemeral: true })
+            }
+
+            if (!db.has(`filter.${interaction.guild.id}`)) {
+                return interaction.reply({ content: "📡 **The system is already disabled.**", ephemeral: true })
             }
 
             db.delete(`filter.${interaction.guild.id}`);
